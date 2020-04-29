@@ -1,0 +1,1 @@
+from sir_lattice_gym.envs.sir_lattice_env import SIRLatticeEnv
