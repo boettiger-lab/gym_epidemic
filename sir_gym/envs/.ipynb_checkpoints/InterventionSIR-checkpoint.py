@@ -152,6 +152,7 @@ class Intervention():
                  tau = None,
                  t_i = None,
                  sigma = None,
+                 sigma_1 = None,
                  f = None,
                  S_i_expected = None,
                  I_i_expected = None,
@@ -159,6 +160,7 @@ class Intervention():
         self.tau = tau
         self.t_i = t_i
         self.sigma = sigma
+        self.sigma_1 = sigma_1
         self.f = f
         self.S_i_expected = S_i_expected
         self.I_i_expected = I_i_expected
@@ -166,7 +168,7 @@ class Intervention():
     
         self.repertoire = {
             "fixed": self.fixed_b,
-            "mc-time": self.maintain_contain_time,
+            #"mc-time": self.maintain_contain_time,
             "mc-state": self.maintain_contain_state,
             "full-suppression": self.fixed_b}
 
@@ -199,28 +201,6 @@ class Intervention():
             result = 1
         return result
 
-    def maintain_contain_time(self,
-                              time,
-                              beta,
-                              gamma,
-                              S,
-                              I):
-        """
-        Variable maintain/contain
-        intervention tuned by 
-        current time
-        """
-        if time >= self.t_i and time < self.t_i + self.tau * self.f:
-            S_expected = (self.S_i_expected -
-                          gamma * (time - self.t_i) *
-                          self.I_i_expected)
-            result = gamma / (beta * S_expected)
-        elif (time >= self.t_i + self.tau * self.f and
-              time < self.t_i + self.tau):
-            result = 0
-        else:
-            result = 1
-        return result
 
     def maintain_contain_state(self,
                                time,
@@ -235,79 +215,14 @@ class Intervention():
         (S(t), I(t))
         """
         if time >= self.t_i and time < self.t_i + self.tau * self.f:
-            result = gamma / (beta * S)
+            result = self.sigma
         elif (time >= self.t_i + self.tau * self.f and
               time < self.t_i + self.tau):
-            result = 0
+            result = self.sigma_1
         else:
             result = 1
         return result
         
-
-
-
-## helper functions for the above:
-def get_SI_expected(
-        t_i_expected,
-        R0,
-        gamma,
-        I0 = 1e-6,
-        Rec0 = 0,
-        integration_fineness = 1000000):
-    """
-    What S_i and I_i do we
-    expect in a time tuned
-    intervention that we
-    plan to start at a time
-    t_i_expected?
-    """
-    S0 = 1 - I0 - Rec0
-    def deriv(state, time):
-        beta = R0 * gamma
-        S, I = state
-        dS = -beta * S * I
-        dI = beta * S * I - gamma * I
-        return np.array([dS, dI])
-
-    state = odeint(deriv, [S0, I0],
-                   np.linspace(0, t_i_expected, integration_fineness))
-    expected_S_i, expected_I_i = state[-1]
-    return (expected_S_i, expected_I_i)
-
-def make_state_tuned_variable_b_func(tau, t_i, f):
-    """
-    create a function to execute
-    the variable-b intervention
-    with parameters t_i, tau and f
-    where we operate based on the current
-    state
-    """
-    return Intervention(
-        tau = tau,
-        t_i = t_i,
-        f = f,
-        strategy = "mc-state")
-
-def make_time_tuned_variable_b_func(tau,
-                                    t_i,
-                                    f,
-                                    S_i_expected,
-                                    I_i_expected):
-    """
-    create a function to execute
-    the variable-b intervention
-    with parameters t_i, tau and f
-    where we operate based on the current
-    time
-    """                                          
-    return Intervention(
-        tau = tau,
-        f = f,
-        t_i = t_i,
-        S_i_expected = S_i_expected,
-        I_i_expected = I_i_expected,
-        strategy = "mc-time")
-
 
 
 def make_fixed_b_func(tau, t_i, sigma):
@@ -321,5 +236,18 @@ def make_fixed_b_func(tau, t_i, sigma):
         t_i = t_i,
         sigma = sigma,
         strategy = "fixed")
+
+def make_2phase_b_func(tau, t_i, f, sigma, sigma_1):
+    """
+    create a function to execute a 2 phase fixed intervention
+    with parameters, t_i, tau, f, sigma and sigma_1
+    """
+    return Intervention(
+        tau = tau,
+        t_i = t_i,
+        f = f,
+        sigma = sigma,
+        sigma_1 = sigma_1,
+        strategy ='mc-state')
 
 
