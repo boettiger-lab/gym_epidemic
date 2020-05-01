@@ -5,6 +5,7 @@ from copy import deepcopy
 import random
 from gym import spaces, logger, error, utils
 from gym.utils import seeding
+import os
 
 from sir_gym.envs.InterventionSIR import *
 from sir_gym.envs.parameters import *
@@ -14,9 +15,9 @@ class SIREnvMorris1(gym.Env):
     metadata = {'render.modes':['human']}
 
     def __init__(self, tau=56, intervention='fc', t_sim_max = 360):
-        self.covid_sir = InterventionSIR(b_func = Intervention(),\
-                                         R0 = R0_default, \
-                                         gamma = gamma_default,\
+        self.covid_sir = InterventionSIR(b_func = Intervention(),
+                                         R0 = R0_default,
+                                         gamma = gamma_default,
                                          inits = inits_default)
         self.covid_sir.reset()
         self.t_sim_max = t_sim_max
@@ -67,6 +68,19 @@ class SIREnvMorris1(gym.Env):
     def reset(self):
         self.covid_sir.reset()
         return self.covid_sir.state
+    
+    def compare_peak(self):
+        """
+        This returns 2 numpy arrays: first one being the analytical result, second being that from the env
+        Both arrays are of the form [t, S, I, R]
+        """
+        name_map = {"o":"mc-time", "fc":"fixed", "fs":"full-suppression"}
+        # TODO: Make sure you get path so this can run regardless of directory
+        # I am presuming to be in the examples directory
+        a_result = np.loadtxt(f"../sir_gym/envs/analytical_results/{name_map[self.intervention]}_{self.tau}.csv",\
+                             delimiter=',')
+        return a_result, np.column_stack((self.covid_sir.time_ts, self.covid_sir.state_ts))
+        
         
 
     def render(self, mode='human'):
