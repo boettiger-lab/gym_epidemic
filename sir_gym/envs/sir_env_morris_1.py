@@ -77,7 +77,7 @@ class SIREnvMorris1(gym.Env):
         name_map = {"o":"mc-time", "fc":"fixed", "fs":"full-suppression"}
         # TODO: Make sure you get path so this can run regardless of directory
         # I am presuming to be in the examples directory
-        a_result = np.loadtxt(f"../sir_gym/envs/analytical_results/{name_map[self.intervention]}_{self.tau}.csv",\
+        a_result = np.loadtxt(f"../../sir_gym/envs/analytical_results/{name_map[self.intervention]}_{self.tau}.csv",\
                              delimiter=',')
         return a_result, np.column_stack((self.covid_sir.time_ts, self.covid_sir.state_ts))
         
