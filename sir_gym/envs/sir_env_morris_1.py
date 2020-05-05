@@ -24,6 +24,9 @@ class SIREnvMorris1(gym.Env):
         self.intervention = intervention
         self.tau = tau
         # Here I allow for the different intervention types discussed in the Morris et al. paper
+        # o - optimal intervention/maintain then suppress
+        # fc - fixed control
+        # fs - fixed suppression
         assert self.intervention in ['o', 'fc', 'fs'], "Invalid intervention input"
         if self.intervention == 'o':
             self.action_space = spaces.Box(low=0, high=1, shape=(4,), dtype=np.float64)
@@ -40,12 +43,14 @@ class SIREnvMorris1(gym.Env):
         if self.intervention == 'fc':
             # From the action space, action[0] will be the start time, 
             # action[1] will be reduction in transmissibility
+            assert action in self.action_space, "Error: Invalid action"
             t_1 = action[0] * self.t_sim_max
             self.covid_sir.b_func = make_fixed_b_func(self.tau, t_1, action[1])
             self.covid_sir.integrate(self.t_sim_max)
         
         elif self.intervention == 'fs':
             # From the action space, action[0] will be the start time
+            assert action in self.action_space, "Error: Invalid action"
             t_1 = action[0] * self.t_sim_max
             self.covid_sir.b_func = make_fixed_b_func(self.tau, t_1, 0)
             self.covid_sir.integrate(self.t_sim_max)
@@ -55,6 +60,7 @@ class SIREnvMorris1(gym.Env):
             # action[1] will be the fraction of time spent in phase 1,
             # action[2] will be the reduction in transmissibility in phase 1
             # action[3] will be the reduction in transmissibility in phase 2
+            assert action in self.action_space, "Error: Invalid action"
             t_1 = action[0] * self.t_sim_max
             self.covid_sir.b_func = make_2phase_b_func(self.tau,
                                                         t_1,
@@ -77,7 +83,8 @@ class SIREnvMorris1(gym.Env):
         name_map = {"o":"mc-time", "fc":"fixed", "fs":"full-suppression"}
         # TODO: Make sure you get path so this can run regardless of directory
         # I am presuming to be in the examples directory
-        a_result = np.loadtxt(f"../../sir_gym/envs/analytical_results/{name_map[self.intervention]}_{self.tau}.csv",\
+        print(os.getcwd())
+        a_result = np.loadtxt(f"../sir_gym/envs/analytical_results/{name_map[self.intervention]}_{self.tau}.csv",
                              delimiter=',')
         return a_result, np.column_stack((self.covid_sir.time_ts, self.covid_sir.state_ts))
         

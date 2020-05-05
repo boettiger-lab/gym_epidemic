@@ -12,7 +12,7 @@ from sir_gym.envs.parameters import *
 
 class SIREnvMorris(gym.Env):
     metadata = {'render.modes':['human']}
-
+    # I stopped working on this ENV; Probably should delete.
     def __init__(self):
         self.covid_sir = InterventionSIR(b_func = Intervention(), R0 = R0_default, gamma = gamma_default, inits = inits_default)
         self.covid_sir.reset()

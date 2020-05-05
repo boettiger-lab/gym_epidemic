@@ -14,3 +14,8 @@ register(
     id='sir-v2',
     entry_point='sir_gym.envs:SIREnvMorris1',
 )
+
+register(
+    id='sir-v3',
+    entry_point='sir_gym.envs:SIREnvMorris2',
+)
