@@ -31,10 +31,18 @@ class InterventionSIR():
         self.R0 = R0
         self.gamma = gamma
         self.inits = inits
+        self.random = False
         self.reset()
         
     def reset(self):
-        self.state = self.inits
+        if self.random:
+            I = np.random.beta(1,10**4)
+            R = np.random.beta(1,10**8)
+            S = 1 - I - R
+            self.inits = np.array([S, I, R])
+            self.state = np.array([S, I, R])
+        else:
+            self.state = self.inits
         self.time = 0
         self.time_ts = np.array([])
         self.state_ts = np.array([[], [], []]).reshape((-1, 3))
