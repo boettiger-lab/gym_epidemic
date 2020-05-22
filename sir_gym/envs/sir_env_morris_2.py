@@ -39,7 +39,7 @@ class SIREnvMorris2(gym.Env):
         elif self.intervention == 'fs':
             self.action_space = spaces.Box(low=0, high=1, shape=(1,), dtype=np.float64)
         
-        self.observation_space = spaces.Box(low=0, high=10**6, shape=(5,), dtype=np.float64)
+        self.observation_space = spaces.Box(low=0, high=10**2, shape=(4,), dtype=np.float64)
         
 
     def step(self, action):
@@ -76,12 +76,12 @@ class SIREnvMorris2(gym.Env):
                                                         action[2],
                                                         action[3])
         self.covid_sir.integrate(self.t_sim_max)
-        state = np.concatenate((self.covid_sir.state, np.array([self.covid_sir.gamma, self.covid_sir.R0])))
+        state = np.concatenate((self.covid_sir.state, np.array([self.covid_sir.R0])))
         return state, np.exp(-self.covid_sir.get_I_max(True)), True, {}
     
     def reset(self):
         self.covid_sir.reset()
-        return np.concatenate((self.covid_sir.state, np.array([self.covid_sir.gamma, self.covid_sir.R0])))
+        return np.concatenate((self.covid_sir.state, np.array([self.covid_sir.R0])))
     
     def compare_peak(self):
         """
