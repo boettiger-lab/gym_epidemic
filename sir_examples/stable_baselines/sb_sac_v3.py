@@ -16,7 +16,7 @@ for i in range(5):
     env = gym.make('sir-v3', intervention='fs', random_params=True, random_obs=True)
     policy_kwargs = dict(activation_fn=th.nn.ReLU, net_arch=[256, 256])
     model = SAC("MlpPolicy", env, verbose=2, batch_size=256, buffer_size=int(1e6), policy_kwargs=policy_kwargs, learning_starts=int(1e4), ent_coef="auto")
-    model.learn(total_timesteps=int(1e5), log_interval=1000)
+    model.learn(total_timesteps=int(1e7), log_interval=int(1e7))
     model.save(f"sb3_sac_auto_ent_{i}")
 
     rewards = []
@@ -34,5 +34,3 @@ for i in range(5):
     output_string += f"For iteration {i}, avg reward over range of R0: {np.mean(rewards)} \n"
     del model
 print(output_string)
-print(max_scale)
-    
