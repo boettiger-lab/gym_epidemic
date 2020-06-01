@@ -5,9 +5,6 @@ from copy import deepcopy
 import random
 from gym import spaces, logger, error, utils
 from gym.utils import seeding
-import bokeh.plotting
-import bokeh.io
-bokeh.io.output_notebook()
 
 class SIREnv(gym.Env):
     metadata = {'render.modes':['human']}
@@ -59,16 +56,7 @@ class SIREnv(gym.Env):
         return np.array([self.S, self.I])
 
     def render(self, mode='human'):
-        plot = bokeh.plotting.figure(plot_width=600,
-                               plot_height=400,
-                               x_axis_label='time')
-        colors = ['blue', 'red', 'orange']
-        labels = ['Susceptible', 'Infected', 'Recovered']
-        for i in range(2):
-            plot.line(range(len(self.history)), [item[i] for item in self.history], color=colors[i], legend=labels[i])
-        plot.line(range(len(self.history)), [self.N - sum(item) for item in self.history], color=colors[2],\
-                                                                              legend=labels[2])
-        return bokeh.plotting.show(plot)
+        pass
 
     def close(self):
         pass
