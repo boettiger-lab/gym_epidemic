@@ -1,0 +1,80 @@
+python/3.6(8):ERROR:150: Module 'python/3.6' conflicts with the currently loaded module(s) 'python/3.7'
+python/3.6(8):ERROR:102: Tcl command execution failed: conflict python
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100 1825k  100 1825k    0     0  15.1M      0 --:--:-- --:--:-- --:--:-- 15.1M
+Defaulting to user installation because normal site-packages is not writeable
+Collecting pip
+  Using cached pip-20.1.1-py2.py3-none-any.whl (1.5 MB)
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 20.1.1
+    Uninstalling pip-20.1.1:
+      Successfully uninstalled pip-20.1.1
+  WARNING: The scripts pip, pip3 and pip3.7 are installed in '/global/home/users/mlapeyro/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+Successfully installed pip-20.1.1
+WARNING: pip is being invoked by an old script wrapper. This will fail in a future version of pip.
+Please see https://github.com/pypa/pip/issues/5599 for advice on fixing the underlying issue.
+To avoid this problem you can invoke Python with '-m pip' instead of running pip directly.
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: stable_baselines3 in /global/home/users/mlapeyro/.local/lib/python3.7/site-packages (0.6.0)
+Requirement already satisfied: numpy in /global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages (from stable_baselines3) (1.17.2)
+Requirement already satisfied: cloudpickle in /global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages (from stable_baselines3) (1.2.2)
+Requirement already satisfied: matplotlib in /global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages (from stable_baselines3) (3.1.1)
+Requirement already satisfied: torch>=1.4.0 in /global/home/users/mlapeyro/.local/lib/python3.7/site-packages (from stable_baselines3) (1.5.0)
+Requirement already satisfied: pandas in /global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages (from stable_baselines3) (0.25.1)
+Requirement already satisfied: gym>=0.17 in /global/home/users/mlapeyro/.local/lib/python3.7/site-packages (from stable_baselines3) (0.17.2)
+Requirement already satisfied: cycler>=0.10 in /global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages (from matplotlib->stable_baselines3) (0.10.0)
+Requirement already satisfied: kiwisolver>=1.0.1 in /global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages (from matplotlib->stable_baselines3) (1.1.0)
+Requirement already satisfied: pyparsing!=2.0.4,!=2.1.2,!=2.1.6,>=2.0.1 in /global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages (from matplotlib->stable_baselines3) (2.4.2)
+Requirement already satisfied: python-dateutil>=2.1 in /global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages (from matplotlib->stable_baselines3) (2.8.0)
+Requirement already satisfied: future in /global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages (from torch>=1.4.0->stable_baselines3) (0.17.1)
+Requirement already satisfied: pytz>=2017.2 in /global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages (from pandas->stable_baselines3) (2019.3)
+Requirement already satisfied: pyglet<=1.5.0,>=1.4.0 in /global/home/users/mlapeyro/.local/lib/python3.7/site-packages (from gym>=0.17->stable_baselines3) (1.5.0)
+Requirement already satisfied: scipy in /global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages (from gym>=0.17->stable_baselines3) (1.4.1)
+Requirement already satisfied: six in /global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages (from cycler>=0.10->matplotlib->stable_baselines3) (1.12.0)
+Requirement already satisfied: setuptools in /global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages (from kiwisolver>=1.0.1->matplotlib->stable_baselines3) (41.4.0)
+WARNING: pip is being invoked by an old script wrapper. This will fail in a future version of pip.
+Please see https://github.com/pypa/pip/issues/5599 for advice on fixing the underlying issue.
+To avoid this problem you can invoke Python with '-m pip' instead of running pip directly.
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: gym in /global/home/users/mlapeyro/.local/lib/python3.7/site-packages (0.17.2)
+Requirement already satisfied: numpy>=1.10.4 in /global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages (from gym) (1.17.2)
+Requirement already satisfied: cloudpickle<1.4.0,>=1.2.0 in /global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages (from gym) (1.2.2)
+Requirement already satisfied: pyglet<=1.5.0,>=1.4.0 in /global/home/users/mlapeyro/.local/lib/python3.7/site-packages (from gym) (1.5.0)
+Requirement already satisfied: scipy in /global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages (from gym) (1.4.1)
+Requirement already satisfied: future in /global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages (from pyglet<=1.5.0,>=1.4.0->gym) (0.17.1)
+Traceback (most recent call last):
+  File "sb_sac_v3.py", line 12, in <module>
+    from stable_baselines3.sac.policies import SACPolicy
+  File "/global/home/users/mlapeyro/.local/lib/python3.7/site-packages/stable_baselines3/__init__.py", line 3, in <module>
+    from stable_baselines3.a2c import A2C
+  File "/global/home/users/mlapeyro/.local/lib/python3.7/site-packages/stable_baselines3/a2c/__init__.py", line 1, in <module>
+    from stable_baselines3.a2c.a2c import A2C
+  File "/global/home/users/mlapeyro/.local/lib/python3.7/site-packages/stable_baselines3/a2c/a2c.py", line 6, in <module>
+    from stable_baselines3.common import logger
+  File "/global/home/users/mlapeyro/.local/lib/python3.7/site-packages/stable_baselines3/common/__init__.py", line 1, in <module>
+    from stable_baselines3.common.cmd_util import make_vec_env, make_atari_env
+  File "/global/home/users/mlapeyro/.local/lib/python3.7/site-packages/stable_baselines3/common/cmd_util.py", line 7, in <module>
+    from stable_baselines3.common.monitor import Monitor
+  File "/global/home/users/mlapeyro/.local/lib/python3.7/site-packages/stable_baselines3/common/monitor.py", line 11, in <module>
+    import pandas
+  File "/global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages/pandas/__init__.py", line 55, in <module>
+    from pandas.core.api import (
+  File "/global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages/pandas/core/api.py", line 24, in <module>
+    from pandas.core.groupby import Grouper, NamedAgg
+  File "/global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages/pandas/core/groupby/__init__.py", line 1, in <module>
+    from pandas.core.groupby.generic import (  # noqa: F401
+  File "/global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages/pandas/core/groupby/generic.py", line 44, in <module>
+    from pandas.core.frame import DataFrame
+  File "/global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages/pandas/core/frame.py", line 115, in <module>
+    from pandas.core.series import Series
+  File "/global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages/pandas/core/series.py", line 4889, in <module>
+    Series._add_series_or_dataframe_operations()
+  File "/global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages/pandas/core/generic.py", line 10747, in _add_series_or_dataframe_operations
+    from pandas.core import window as rwindow
+  File "/global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages/pandas/core/window.py", line 13, in <module>
+    import pandas._libs.window as libwindow
+ImportError: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.21' not found (required by /global/software/sl-7.x86_64/modules/langs/python/3.7/lib/python3.7/site-packages/pandas/_libs/window.cpython-37m-x86_64-linux-gnu.so)
