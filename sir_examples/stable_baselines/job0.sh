@@ -19,5 +19,13 @@
 #
 ## Command(s) to run:
 module load python/3.7
-source ~/.virtualenv/open_ai_covid19/bin/activate
+module load cuda/10.1
+module load gcc/8.3.0
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python get-pip.py
+rm get-pip.py
+pip install --upgrade pip
+pip install stable_baselines3
+pip install gym
 python sb_sac_v3.py
+
