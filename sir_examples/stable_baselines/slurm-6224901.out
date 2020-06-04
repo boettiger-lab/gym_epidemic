@@ -1,0 +1,10 @@
+Using cuda device
+Wrapping the env in a DummyVecEnv.
+------------------------------
+| time/              |       |
+|    episodes        | 10000 |
+|    fps             | 392   |
+|    time_elapsed    | 25    |
+|    total timesteps | 10000 |
+------------------------------
+slurmstepd: error: *** JOB 6224901 ON n0013.savio2 CANCELLED AT 2020-06-02T13:30:04 ***
