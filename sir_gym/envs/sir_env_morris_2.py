@@ -45,7 +45,7 @@ class SIREnvMorris2(gym.Env):
     def step(self, action):
         
         if self.intervention == 'fc':
-            # From the action space, action[0] will be the start time, 
+            # From the action space, action[0]*360 will be the start time, 
             # action[1] will be reduction in transmissibility
             assert action in self.action_space, f"Error: {action} Invalid action"
             t_1 = action[0] * self.t_sim_max
@@ -53,7 +53,7 @@ class SIREnvMorris2(gym.Env):
 
         
         elif self.intervention == 'fs':
-            # From the action space, action[0] will be the start time
+            # From the action space, action[0]*360 will be the start time
             # Occasionally, with stable baselines I've noticed that it selects an action
             # that is a very small negative number, not sure why this is, but in this case,
             # I clip the action.
@@ -64,7 +64,7 @@ class SIREnvMorris2(gym.Env):
 
         
         elif self.intervention == 'o':
-            # From the action space, action[0] will be the start time,
+            # From the action space, action[0]*360 will be the start time,
             # action[1] will be the fraction of time spent in phase 1,
             # action[2] will be the reduction in transmissibility in phase 1
             # action[3] will be the reduction in transmissibility in phase 2
