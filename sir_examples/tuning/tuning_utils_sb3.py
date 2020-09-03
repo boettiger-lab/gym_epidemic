@@ -255,11 +255,11 @@ def sample_sac_params(trial):
     :param trial: (optuna.trial)
     :return: (dict)
     """
-    gamma = trial.suggest_categorical('gamma', [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999])
+    gamma = trial.suggest_categorical('gamma', [0.99])
     learning_rate = trial.suggest_loguniform('lr', 1e-5, 1)
     batch_size = trial.suggest_categorical('batch_size', [16, 32, 64, 128, 256, 512])
     buffer_size = trial.suggest_categorical('buffer_size', [int(1e4), int(1e5), int(1e6)])
-    learning_starts = trial.suggest_categorical('learning_starts', [0, 1000, 10000, 20000])
+    learning_starts = trial.suggest_categorical('learning_starts', [0])
     # train_freq = trial.suggest_categorical('train_freq', [1, 10, 100, 300])
     train_freq = trial.suggest_categorical('train_freq', [8, 16, 32, 64, 128, 256, 512])
     # Polyak coeff
@@ -267,16 +267,25 @@ def sample_sac_params(trial):
     # gradient_steps takes too much time
     # gradient_steps = trial.suggest_categorical('gradient_steps', [1, 100, 300])
     gradient_steps = train_freq
-    ent_coef = trial.suggest_categorical('ent_coef', ['auto', 0.5, 0.1, 0.05, 0.01, 0.0001, 0.001, 0.00001])
-    ent_coef = 'auto'
+    ent_coef = trial.suggest_categorical('ent_coef', ['auto', 0.05, 0.01, 0.001, 0.005])
     log_std_init = trial.suggest_uniform('log_std_init', -4, 1)
-    net_arch = trial.suggest_categorical('net_arch', ["small", "medium", "big"])
-    # activation_fn = trial.suggest_categorical('activation_fn', [nn.Tanh, nn.ReLU, nn.ELU, nn.LeakyReLU])
+    POI_R0s = trial.suggest_categorical('POI_R0s', ["three"])
+    epsilon = trial.suggest_categorical('epsilon', [1])
+    burn_in = trial.suggest_categorical('burn_in', [0])
 
+    net_arch = trial.suggest_categorical('net_arch', ["small", 'medium', "deep"])
+    # activation_fn = trial.suggest_categorical('activation_fn', [nn.Tanh, nn.ReLU, nn.ELU, nn.LeakyReLU])
+    
+    POI_R0s = {
+            'two': [2, 4],
+            'three': [2, 3, 4],
+            'five': [2, 2.5, 3, 3.5, 4]
+            }[POI_R0s]
     net_arch = {
         'small': [64, 64],
         'medium': [256, 256],
         'big': [400, 300],
+        'deep': [100, 100, 100, 100, 100]
     }[net_arch]
 
     target_entropy = 'auto'
@@ -295,7 +304,10 @@ def sample_sac_params(trial):
         'ent_coef': ent_coef,
         'tau': tau,
         'target_entropy': target_entropy,
-        'policy_kwargs': dict(log_std_init=log_std_init, net_arch=net_arch)
+        'policy_kwargs': dict(log_std_init=log_std_init, net_arch=net_arch),
+        'burn_in': burn_in,
+        'epsilon': epsilon,
+        'POI_R0s': POI_R0s
     }
 
 
