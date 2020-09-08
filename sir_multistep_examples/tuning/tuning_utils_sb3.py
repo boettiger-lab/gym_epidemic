@@ -273,7 +273,7 @@ def sample_sac_params(trial):
     epsilon = trial.suggest_categorical('epsilon', [1])
     burn_in = trial.suggest_categorical('burn_in', [0])
 
-    net_arch = trial.suggest_categorical('net_arch', ["small", 'medium', "deep"])
+    net_arch = trial.suggest_categorical('net_arch', ["small"])
     # activation_fn = trial.suggest_categorical('activation_fn', [nn.Tanh, nn.ReLU, nn.ELU, nn.LeakyReLU])
     
     POI_R0s = {

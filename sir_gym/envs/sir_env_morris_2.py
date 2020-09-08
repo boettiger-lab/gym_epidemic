@@ -112,14 +112,16 @@ class SIREnvMorris2(gym.Env):
             covid_sir.b_func.S_i_expected = S_i_expected
             covid_sir.b_func.I_i_expected = I_i_expected
             covid_sir.b_func.f = f
+            sigma = 1 / (covid_sir.R0  * S_i_expected)
     
         elif self.intervention == "fc":
             covid_sir.b_func.strategy = "fixed"
             S_i_expected, sigma = oi.calc_Sb_opt(
                     covid_sir.R0,
                     covid_sir.gamma,
-                    tau)
+                    self.tau)
             covid_sir.b_func.sigma = sigma
+            f = None
                 
         elif self.intervention == "fs":
             covid_sir.b_func.strategy = "full-suppression"
@@ -128,13 +130,14 @@ class SIREnvMorris2(gym.Env):
                     covid_sir.gamma * self.tau,
                     0)
             covid_sir.b_func.sigma = 0
-            
+            sigma = None
+            f = None
         t_i_opt = covid_sir.t_of_S(S_i_expected)[0]
         covid_sir.b_func.t_i = t_i_opt
             
         covid_sir.integrate(self.t_sim_max)
         anal = np.column_stack((covid_sir.time_ts, covid_sir.state_ts))
-        return anal, y, t_i_opt
+        return anal, y, t_i_opt, sigma, f
         
         
 
