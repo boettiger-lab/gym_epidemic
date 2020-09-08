@@ -1,0 +1,38 @@
+When performing a 20 trial tuning search using TPE-sampler with median halving on 
+environment with only one set of parameters and one possible initial state, best hyper-parameters:
+gamma: 0.98
+lr: 1.2e-3
+batch_size: 256
+learning_starts: 1e4
+train_freq: 8
+tau: 0.02
+ent_coef: 1e-4
+log_std_int: -3.87
+net_arch: small
+
+When performing a 20 trial tuning search using TPE-sampler with median halving on environment
+with a range of parameters (uniform distribution from 2 to 10) and one initial state:
+gamma: 0.98
+lr: 1e-05
+batch_size: 128
+learning_starts: 0
+train_freq: 512
+tau: 0.005
+ent_coef: 0.01
+log_std_init: -1.7
+net_arch: big
+
+When performing a 20 trial tuning search using TPE-sampler with meidan halving on environment
+with a range of parameters (uniform distribution from 2 to 10) and a range of initial states (uniform distribution from .001 on I and R):
+gamma: 0.98
+lr: 4.4e-5
+batch_size: 128
+buffer_size: 1e5
+learning_starts: 0
+train_freq: 16
+tau: .01
+ent_coef: .01
+log_std_init: -.83
+net_arch: big
+
+
