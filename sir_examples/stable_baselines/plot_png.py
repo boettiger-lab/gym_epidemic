@@ -1,41 +1,89 @@
 import gym
-import os
-import sys
-sys.path.append(os.path.realpath('../..'))
 import matplotlib.pyplot as plt
 from stable_baselines3 import SAC
 import sir_gym
 import numpy as np
+import argparse 
 
-model = SAC.load("models/sb3_sac_auto_ent_0")    
-y1 = []
-y2 = []
+parser = argparse.ArgumentParser()
+parser.add_argument("-n", type=int, default=0, help="Argument for what training run to examine")
+parser.add_argument("-i", type=str, default="fs", help="Argument for what method of intervention to examine")
+args = parser.parse_args()
+
+model = SAC.load(f"trash/sb3_sac_sir_reward{args.n}")    
+
+# Making lists so I can average over 10 trajectories
+y1 = [[] for i in range(10)]
+y2 = [[] for i in range(10)]
+y3 = [[] for i in range(10)]
+y4 = [[] for i in range(10)]
+y5 = [[] for i in range(10)]
+y6 = [[] for i in range(10)]
 rewards = []
-for R0 in np.linspace(2, 10, 50):
-    env = gym.make('sir-v3', intervention='fs')
-    env.covid_sir.random_obs = False 
-    env.covid_sir.random_params = False
-    env.covid_sir.R0 = R0
-    obs = env.reset()
-    action, states = model.predict(obs)
-    obs, reward, dones, info = env.step(action)
-    _, _, t_i = env.compare_peak()
-    y1.append(t_i)
-    y2.append(action * 360)
-    rewards.append(reward)
-print(np.mean(rewards))
-fig, (ax1, ax2) = plt.subplots(1,2)
-ax1.scatter(np.linspace(2, 10, 50), y1, color='b')
-ax1.scatter(np.linspace(2, 10, 50), y2, color='r')
+R_space = np.linspace(2, 4, 30)
+# Plotting a snippet of Intervention time
+for i in range(10):
+    for R0 in R_space:
+        env = gym.make('sir-v3', intervention=args.i)
+        env.covid_sir.random_obs = False 
+        env.covid_sir.random_params = False
+        env.covid_sir.R0 = R0
+        obs = env.reset()
+        action, states = model.predict(obs)
+        obs, reward, dones, info = env.step(action)
+        _, _, t_i, sigma, f = env.compare_peak()
+        # Adding the corresponding actions for each environment
+        y1[i].append(t_i)
+        y2[i].append(action * 360)
+        if args.i in ["fc", "o"]:
+            y3[i].append(sigma)
+            y4[i].append(action[1])
+            if args.i == "o":
+                y5[i].append(f)
+                y6[i].append(action[2])
+        rewards.append(reward)
 
-env = gym.make("sir-v3", intervention='fs')
-obs = env.reset()
-print(obs)
-env.covid_sir.R0 = 10
-action, states = model.predict(obs)
-obs, reward, dones, info = env.step(action)
-x, y, t = env.compare_peak()
-ax2.plot(x[:,0], x[:,2], color='blue')
-ax2.plot(y[:,0], y[:,2], color='red')
-plt.savefig("trash_random_obs_params.png")
-print(np.exp(-np.max(x[:,2])), np.exp(-np.max(y[:,2])), reward)
+# Splitting up plotting by intervention method
+if args.i == "fs":
+    fig, axs = plt.subplots(1, 2, figsize=(15,10))
+    axs[0].scatter(R_space, np.mean(y1, axis=0), color='b')
+    axs[0].scatter(R_space, np.mean(y2, axis=0), color='r')
+    axs[0].set_title("Mean Intervention Time vs. R0")
+    axs[1].scatter(R_space, np.std(y2, axis=0), color='r')
+    axs[1].set_title("Intervention Time Std vs. R0")
+
+elif args.i == "fc":
+    fig, axs = plt.subplots(2, 2, figsize=(15,10))
+    axs[0, 0].scatter(R_space, np.mean(y1, axis=0), color='b')
+    axs[0, 0].scatter(R_space, np.mean(y2, axis=0), color='r')
+    axs[0, 0].set_title("Mean Intervention Time vs. R0")
+    axs[0, 1].scatter(R_space, np.std(y2, axis=0), color='r')
+    axs[0, 1].set_title("Intervention Time Std vs. R0")
+    axs[1, 0].scatter(R_space, np.mean(y3, axis=0), color='b')
+    axs[1, 0].scatter(R_space, np.mean(y4, axis=0), color='r')
+    axs[1, 0].set_title("Mean Sigma vs. R0")
+    axs[1, 1].scatter(R_space, np.std(y4, axis=0), color='r')
+    axs[1, 1].set_title("Sigma Std vs. R0")
+
+elif args.i == "o":
+    fig, axs= plt.subplot(3, 2, figsize=(15, 10))
+    axs[0, 0].scatter(R_space, np.mean(y1, axis=0), color='b')
+    axs[0, 0].scatter(R_space, np.mean(y2, axis=0), color='r')
+    axs[0, 0].set_title("Mean Intervention Time vs. R0")
+    axs[0, 1].scatter(R_space, np.std(y2, axis=0), color='r')
+    axs[0, 1].set_title("Intervention Time Std vs. R0")
+    axs[1, 0].scatter(R_space, np.mean(y3, axis=0), color='b')
+    axs[1, 0].scatter(R_space, np.mean(y4, axis=0), color='r')
+    axs[1, 0].set_title("Mean Sigma vs. R0")
+    axs[1, 1].scatter(R_space, np.std(y4, axis=0), color='r')
+    axs[1, 1].set_title("Sigma Std vs. R0")
+    axs[2, 0].scatter(R_space, np.mean(y5, axis=0), color='b')
+    axs[2, 0].scatter(R_space, np.mean(y6, axis=0), color='r')
+    axs[2, 0].set_title("Mean F vs. R0")
+    axs[2, 1].scatter(R_space, np.std(y6, axis=0), color='r')
+    axs[2, 1].set_title("F Std vs. R0")
+
+plt.savefig("trash.png")
+
+
+
