@@ -1,7 +1,4 @@
-# COVID-19 Gym
-
-[Marcus Lapeyrolerie](https://www.carlboettiger.info/members#), [Carl Boettiger](https://www.carlboettiger.info)
-[Department of Environmental Science, Policy and Management](https://ourenvironment.berkeley.edu)
+# SIR Gym
 
 ## Repository Info
 This repo contains RL environments that model epidemic control problems. Additionally in `examples_sir`, there are models and scripts to recreate the results in "One-Shot Epidemic Control with Soft Actor Critic". 
