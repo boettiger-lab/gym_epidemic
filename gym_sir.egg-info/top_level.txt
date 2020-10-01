@@ -1,3 +1,0 @@
-examples_sir
-gym_sir
-gym_sir_multistep
