@@ -1,3 +1,0 @@
-S ~ np.random.uniform(0, 1e-6)
-I ~ np.random.uniform(0, 1e-6)
-R0 ~ choice([2, 3, 4]) 
