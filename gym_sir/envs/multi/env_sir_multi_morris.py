@@ -7,9 +7,9 @@ from gym import spaces, logger, error, utils
 from gym.utils import seeding
 import os
 
-from gym_sir_multistep.envs.InterventionSIR import *
-from gym_sir_multistep.envs.parameters import *
-import gym_sir_multistep.envs.optimize_interventions as oi
+from gym_sir.envs.multi.InterventionSIR import *
+from gym_sir.envs.multi.parameters import *
+import gym_sir.envs.multi.optimize_interventions as oi
 
 
 class EnvSIRMultiMorris(gym.Env):

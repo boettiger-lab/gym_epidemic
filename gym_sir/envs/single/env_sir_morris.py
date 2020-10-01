@@ -7,10 +7,10 @@ from gym import spaces, logger, error, utils
 from gym.utils import seeding
 import os
 
-from gym_sir.envs.analytical_results import Intervention as I
-from gym_sir.envs.InterventionSIR import *
-from gym_sir.envs.parameters import *
-import gym_sir.envs.optimize_interventions as oi
+from gym_sir.envs.single.analytical_results import Intervention as I
+from gym_sir.envs.single.InterventionSIR import *
+from gym_sir.envs.single.parameters import *
+import gym_sir.envs.single.optimize_interventions as oi
 
 
 class EnvSIRMorris(gym.Env):

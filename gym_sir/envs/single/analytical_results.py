@@ -1,6 +1,6 @@
-from gym_sir.envs.InterventionSIR import InterventionSIR
-import gym_sir.envs.parameters as params
-import gym_sir.envs.optimize_interventions as oi
+from gym_sir.envs.single.InterventionSIR import InterventionSIR
+import gym_sir.envs.single.parameters as params
+import gym_sir.envs.single.optimize_interventions as oi
 import numpy as np
 
 class Intervention():

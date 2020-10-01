@@ -12,7 +12,7 @@ parser.add_argument("-i", default="fs", type=str, help="Input intervention type.
 args = parser.parse_args()
 
 def create_env(n_envs=0, eval_env=None):
-    env = gym.make("sir-v3", intervention=f'{args.i}', random_params=True, random_obs=True)
+    env = gym.make("sir-v0", intervention=f'{args.i}', random_params=True, random_obs=True)
     return env
 
 def create_model(*_args, **kwargs):
