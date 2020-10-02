@@ -1,4 +1,4 @@
-# SIR Gym
+# Epidemic Control Gym
 
 ## Repository Info
 This repo contains RL environments that model epidemic control problems. Additionally in `examples_sir`, there are models and scripts to recreate the results in "One-Shot Epidemic Control with Soft Actor Critic". 
