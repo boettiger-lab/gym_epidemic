@@ -10,10 +10,9 @@ We have the following environments:
 
 ## Installation Instructions
 
-If you are cloning this repo from github; make sure to install the different environments as follows from within the home directory:
+The environments can be installed and run from the command line via:
+`pip install gym_epidemic`
+
+If you are cloning this repo from github; from the current directory run:
 `pip install -e .`
 
-To have the appropriate software to run the scripts in `examples_sir`, run:
-`pip install -r requirements_sb3.txt`
-
-We advise that you do these installations in a designated virtual environment.
