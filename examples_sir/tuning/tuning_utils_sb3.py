@@ -149,12 +149,9 @@ def sample_ppo_params(trial):
     gae_lambda = trial.suggest_categorical('gae_lambda', [0.8, 0.9, 0.92, 0.95, 0.98, 0.99, 1.0])
     max_grad_norm = trial.suggest_categorical('max_grad_norm', [0.3, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 2, 5])
     vf_coef = trial.suggest_uniform('vf_coef', 0, 1)
-    net_arch = trial.suggest_categorical('net_arch', ['small', 'medium'])
+    net_arch = trial.suggest_categorical('net_arch', ["small", 'medium', "deep"])
     log_std_init = trial.suggest_uniform('log_std_init', -4, 1)
     sde_sample_freq = trial.suggest_categorical('sde_sample_freq', [-1, 8, 16, 32, 64, 128, 256])
-    ortho_init = False
-    # ortho_init = trial.suggest_categorical('ortho_init', [False, True])
-    # activation_fn = trial.suggest_categorical('activation_fn', ['tanh', 'relu', 'elu', 'leaky_relu'])
     activation_fn = trial.suggest_categorical('activation_fn', ['tanh', 'relu'])
 
     # TODO: account when using multiple envs
@@ -162,8 +159,9 @@ def sample_ppo_params(trial):
         batch_size = n_steps
 
     net_arch = {
-        'small': [dict(pi=[64, 64], vf=[64, 64])],
-        'medium': [dict(pi=[256, 256], vf=[256, 256])],
+        'small': [dict(vf=[64, 64], pi=[64, 64])],
+        'medium': [dict(vf=[256, 256], pi=[256, 256])],
+        'deep': [dict(vf=[100,100,100,100,100], pi=[100,100,100,100,100])]
     }[net_arch]
 
     activation_fn = {
@@ -186,7 +184,7 @@ def sample_ppo_params(trial):
         'vf_coef': vf_coef,
         'sde_sample_freq': sde_sample_freq,
         'policy_kwargs': dict(log_std_init=log_std_init, net_arch=net_arch,
-                              activation_fn=activation_fn, ortho_init=ortho_init)
+                              activation_fn=activation_fn)
     }
 
 
@@ -257,8 +255,8 @@ def sample_sac_params(trial):
     """
     gamma = trial.suggest_categorical('gamma', [0.99])
     learning_rate = trial.suggest_loguniform('lr', 1e-5, 1)
-    batch_size = trial.suggest_categorical('batch_size', [16, 32, 64, 128, 256, 512])
-    buffer_size = trial.suggest_categorical('buffer_size', [int(1e4), int(1e5), int(1e6)])
+    batch_size = trial.suggest_categorical('batch_size', [100, 500, 1000, 2000, 5000, 10000])
+    buffer_size = trial.suggest_categorical('buffer_size', [int(2e4), int(1e5), int(5e5), int(1e6)])
     learning_starts = trial.suggest_categorical('learning_starts', [0])
     # train_freq = trial.suggest_categorical('train_freq', [1, 10, 100, 300])
     train_freq = trial.suggest_categorical('train_freq', [8, 16, 32, 64, 128, 256, 512])
@@ -269,18 +267,10 @@ def sample_sac_params(trial):
     gradient_steps = train_freq
     ent_coef = trial.suggest_categorical('ent_coef', ['auto', 0.05, 0.01, 0.001, 0.005])
     log_std_init = trial.suggest_uniform('log_std_init', -4, 1)
-    POI_R0s = trial.suggest_categorical('POI_R0s', ["three"])
-    epsilon = trial.suggest_categorical('epsilon', [1])
-    burn_in = trial.suggest_categorical('burn_in', [0])
 
     net_arch = trial.suggest_categorical('net_arch', ["small", 'medium', "deep"])
     # activation_fn = trial.suggest_categorical('activation_fn', [nn.Tanh, nn.ReLU, nn.ELU, nn.LeakyReLU])
     
-    POI_R0s = {
-            'two': [2, 4],
-            'three': [2, 3, 4],
-            'five': [2, 2.5, 3, 3.5, 4]
-            }[POI_R0s]
     net_arch = {
         'small': [64, 64],
         'medium': [256, 256],
@@ -304,10 +294,7 @@ def sample_sac_params(trial):
         'ent_coef': ent_coef,
         'tau': tau,
         'target_entropy': target_entropy,
-        'policy_kwargs': dict(log_std_init=log_std_init, net_arch=net_arch),
-        'burn_in': burn_in,
-        'epsilon': epsilon,
-        'POI_R0s': POI_R0s
+        'policy_kwargs': dict(log_std_init=log_std_init, net_arch=net_arch)
     }
 
 
