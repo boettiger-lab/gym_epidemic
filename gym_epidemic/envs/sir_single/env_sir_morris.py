@@ -35,19 +35,19 @@ class EnvSIRMorris(gym.Env):
         # fs - fixed suppression
         assert self.intervention in ['o', 'fc', 'fs'], f"{self.intervention} Invalid intervention input"
         if self.intervention == 'fc':
-            self.action_space = spaces.Box(low=0, high=1, shape=(2,), dtype=np.float64)
+            self.action_space = spaces.Box(low=-1, high=1, shape=(2,), dtype=np.float32)
         elif self.intervention == 'fs':
-            self.action_space = spaces.Box(low=0, high=1, shape=(1,), dtype=np.float64)
+            self.action_space = spaces.Box(low=-1, high=1, shape=(1,), dtype=np.float32)
         
-        self.observation_space = spaces.Box(low=0, high=10**2, shape=(3,), dtype=np.float64)
+        self.observation_space = spaces.Box(low=0, high=10**2, shape=(3,), dtype=np.float32)
         
 
     def step(self, action):
-        
         if self.intervention == 'fc':
             # From the action space, action[0]*360 will be the start time, 
             # action[1] will be reduction in transmissibility
             assert action in self.action_space, f"Error: {action} Invalid action"
+            action = (action + 1) / 2
             t_1 = action[0] * self.t_sim_max
             self.covid_sir.b_func = make_fixed_b_func(self.tau, t_1, action[1])
 
@@ -57,8 +57,8 @@ class EnvSIRMorris(gym.Env):
             # Occasionally, with stable baselines I've noticed that it selects an action
             # that is a very small negative number, not sure why this is, but in this case,
             # I clip the action.
-            action = np.clip(action, 0, 1)
             assert action in self.action_space, f"Error: {action} Invalid action"
+            action = (action + 1) / 2
             t_1 = action[0] * self.t_sim_max
             self.covid_sir.b_func = make_fixed_b_func(self.tau, t_1, 0)
 
