@@ -2,6 +2,7 @@ import gym
 import matplotlib.pyplot as plt
 from stable_baselines3 import SAC
 import gym_epidemic
+from gym_epidemic.envs.sir_single.utils import get_action
 import numpy as np
 import argparse 
 import time
@@ -18,7 +19,7 @@ if __name__ == "__main__":
     y5 = [[] for i in range(10)]
     y6 = [[] for i in range(10)]
     for i in range(5):
-        model = SAC.load(f"models/sb3_sac_sir_{args.i}_{i}")    
+        model = SAC.load(f"../tuning/logs/sac/sir-v0_19/best_model.zip")    
         rewards = []
         R_space = np.linspace(2, 4, 10)
         for j, R0 in enumerate(R_space):
@@ -28,13 +29,14 @@ if __name__ == "__main__":
                 env.covid_sir.random_params = False
                 env.covid_sir.R0 = R0
                 obs = env.reset()
-                action, states = model.predict(obs)
-                obs, reward, dones, info = env.step(action)
+                normalized_action, states = model.predict(obs)
+                obs, reward, dones, info = env.step(normalized_action)
                 if k == 0:
                     _x, _y, t_i, sigma, f = env.compare_peak()
                 # Adding the corresponding actions for each environment
                 y1[j].append(t_i)
-                y2[j].append(action[0] * 360)
+                action = get_action(normalized_action, env)
+                y2[j].append(action[0])
                 if args.i in ["fc", "o"]:
                     y3[j].append(sigma)
                     y4[j].append(action[1])

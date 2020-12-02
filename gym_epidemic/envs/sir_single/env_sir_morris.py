@@ -9,6 +9,7 @@ import os
 
 from gym_epidemic.envs.sir_single.optimal_intervention import Intervention as I
 from gym_epidemic.envs.sir_single.InterventionSIR import *
+from gym_epidemic.envs.sir_single.utils import *
 from gym_epidemic.envs.sir_single.parameters import *
 import gym_epidemic.envs.sir_single.optimize_interventions as oi
 
@@ -16,7 +17,7 @@ import gym_epidemic.envs.sir_single.optimize_interventions as oi
 class EnvSIRMorris(gym.Env):
     metadata = {'render.modes':['human']}
 
-    def __init__(self, tau=56, intervention='fs', t_sim_max = 360, random_obs = False, random_params = False, reward_scale=.1):
+    def __init__(self, tau=56, intervention='fs', t_sim_max = 360, random_obs = True, random_params = True, reward_scale=.1):
         self.covid_sir = InterventionSIR(b_func = Intervention(),
                                          R0 = R0_default,
                                          gamma = gamma_default,
@@ -42,25 +43,18 @@ class EnvSIRMorris(gym.Env):
         self.observation_space = spaces.Box(low=0, high=10**2, shape=(3,), dtype=np.float32)
         
 
-    def step(self, action):
+    def step(self, normalized_action):
+        assert normalized_action in self.action_space, f"Error: {action} Invalid action"
+        action = get_action(normalized_action, self)
         if self.intervention == 'fc':
-            # From the action space, action[0]*360 will be the start time, 
+            # From the action space, action[0] will be the start time, 
             # action[1] will be reduction in transmissibility
-            assert action in self.action_space, f"Error: {action} Invalid action"
-            action = (action + 1) / 2
-            t_1 = action[0] * self.t_sim_max
-            self.covid_sir.b_func = make_fixed_b_func(self.tau, t_1, action[1])
+            self.covid_sir.b_func = make_fixed_b_func(self.tau, action[0], action[1])
 
         
         elif self.intervention == 'fs':
-            # From the action space, action[0]*360 will be the start time
-            # Occasionally, with stable baselines I've noticed that it selects an action
-            # that is a very small negative number, not sure why this is, but in this case,
-            # I clip the action.
-            assert action in self.action_space, f"Error: {action} Invalid action"
-            action = (action + 1) / 2
-            t_1 = action[0] * self.t_sim_max
-            self.covid_sir.b_func = make_fixed_b_func(self.tau, t_1, 0)
+            # From the action space, action[0] will be the start time
+            self.covid_sir.b_func = make_fixed_b_func(self.tau, action[0], 0)
 
         
         self.covid_sir.integrate(self.t_sim_max)
