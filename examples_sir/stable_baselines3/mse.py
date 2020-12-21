@@ -2,6 +2,7 @@ import gym
 import matplotlib.pyplot as plt
 from stable_baselines3 import SAC
 import gym_epidemic
+from gym_epidemic.envs.sir_single.utils import *
 import numpy as np
 import argparse 
 import time
@@ -24,11 +25,12 @@ if __name__ == "__main__":
             env.covid_sir.random_obs = True 
             env.covid_sir.random_params = True
             obs = env.reset()
-            action, states = model.predict(obs)
-            obs, reward, dones, info = env.step(action)
+            normalized_action, states = model.predict(obs)
+            obs, reward, dones, info = env.step(normalized_action)
             _x, _y, t_i, sigma, f = env.compare_peak()
             # Adding the corresponding actions for each environment
-            y1.append([t_i, action[0] * 360])
+            action = get_action(normalized_action)
+            y1.append([t_i, action[0]])
             if args.i == "fc":
                 y2.append([sigma, action[1]])
             rewards.append(reward)

@@ -10,6 +10,7 @@ import time
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", type=str, default="fs", help="Argument for what method of intervention to examine")
+    parser.add_argument("-n", type=str, default="sac", help="Name of model parameters zip")
     args = parser.parse_args()
 
     y1 = [[] for i in range(10)]
@@ -19,14 +20,12 @@ if __name__ == "__main__":
     y5 = [[] for i in range(10)]
     y6 = [[] for i in range(10)]
     for i in range(5):
-        model = SAC.load(f"../tuning/logs/sac/sir-v0_19/best_model.zip")    
+        model = SAC.load(args.n)    
         rewards = []
         R_space = np.linspace(2, 4, 10)
         for j, R0 in enumerate(R_space):
             for k in range(10):
-                env = gym.make('sir-v0', intervention=args.i)
-                env.covid_sir.random_obs = False 
-                env.covid_sir.random_params = False
+                env = gym.make('sir-v0', intervention=args.i, random_obs=False, random_params=False)
                 env.covid_sir.R0 = R0
                 obs = env.reset()
                 normalized_action, states = model.predict(obs)
@@ -35,7 +34,7 @@ if __name__ == "__main__":
                     _x, _y, t_i, sigma, f = env.compare_peak()
                 # Adding the corresponding actions for each environment
                 y1[j].append(t_i)
-                action = get_action(normalized_action, env)
+                action = get_action(env, normalized_action)
                 y2[j].append(action[0])
                 if args.i in ["fc", "o"]:
                     y3[j].append(sigma)

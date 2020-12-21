@@ -45,7 +45,7 @@ class EnvSIRMorris(gym.Env):
 
     def step(self, normalized_action):
         assert normalized_action in self.action_space, f"Error: {action} Invalid action"
-        action = get_action(normalized_action, self)
+        action = get_action(self, normalized_action)
         if self.intervention == 'fc':
             # From the action space, action[0] will be the start time, 
             # action[1] will be reduction in transmissibility
