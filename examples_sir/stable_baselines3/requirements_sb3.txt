@@ -70,5 +70,5 @@ torch==1.6.0
 tqdm==4.48.2
 urllib3==1.25.10
 wcwidth==0.2.5
-Werkzeug==1.0.1
+Werkzeug==2.2.3
 wrapt==1.12.1
